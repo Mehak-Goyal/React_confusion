@@ -30,7 +30,7 @@ class Main extends React.Component {
           onClick={(dishId) => this.onDishSelect(dishId)}
         ></Menu>
         <DishDetail
-          dishSelect={
+          dish={
             this.state.dishes.filter(
               (dish) => dish.id === this.state.selectedDish
             )[0]
