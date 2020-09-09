@@ -32,6 +32,22 @@ class Main extends React.Component {
         ></Home>
       );
     };
+
+    const DishWithId = ({ match }) => {
+      return (
+        <DishDetail
+          dish={
+            this.state.dishes.filter(
+              (dish) => dish.id === parseInt(match.params.dishId, 10)
+            )[0]
+          }
+          comments={this.state.comments.filter(
+            (comment) => comment.dishId === parseInt(match.params.dishId, 10)
+          )}
+        />
+      );
+    };
+
     return (
       <div>
         <Header></Header>
@@ -42,6 +58,7 @@ class Main extends React.Component {
             path="/menu"
             component={() => <Menu dishes={this.state.dishes}></Menu>}
           ></Route>
+          <Route path="/menu/:dishId" component={DishWithId}></Route>
           <Route exact path="/contactus" component={Contact}></Route>
           <Redirect to="/home"></Redirect>
         </Switch>
