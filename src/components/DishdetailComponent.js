@@ -38,11 +38,12 @@ function RenderDish({ dish }) {
   }
 }
 
-function RenderComments({ comments }) {
+function RenderComments({ comments, addComment, dishId }) {
   if (comments != null) {
     return (
       <div>
         <h4>Comments</h4>
+
         <ul className="list-unstyled">
           {comments.map((comment) => {
             return (
@@ -60,43 +61,14 @@ function RenderComments({ comments }) {
             );
           })}
         </ul>
-        <div>
-          <CommentForm></CommentForm>
-        </div>
+        <CommentForm dishId={dishId} addComment={addComment}></CommentForm>
       </div>
     );
   } else {
     return <div></div>;
   }
 }
-const DishDetail = (props) => {
-  return props.dish ? (
-    <div className="container">
-      <div className="row">
-        <Breadcrumb>
-          <BreadcrumbItem>
-            <Link to="/menu">Menu</Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
-        </Breadcrumb>
-        <div className="col-12">
-          <h3>{props.dish.name}</h3>
-          <hr></hr>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-12 col-md-5 m-1">
-          <RenderDish dish={props.dish}></RenderDish>
-        </div>
-        <div className="col-12 col-md-5 m-1">
-          <RenderComments comments={props.comments}></RenderComments>
-        </div>
-      </div>
-    </div>
-  ) : (
-    <div></div>
-  );
-};
+
 class CommentForm extends Component {
   constructor(props) {
     super(props);
@@ -109,8 +81,12 @@ class CommentForm extends Component {
   }
 
   handleSubmit(values) {
-    console.log("current state is : " + JSON.stringify(values));
-    alert("current state is : " + JSON.stringify(values));
+    this.props.addComment(
+      this.props.dishId,
+      values.rating,
+      values.author,
+      values.comment
+    );
   }
 
   toggleModal() {
@@ -139,13 +115,11 @@ class CommentForm extends Component {
                 toggle={this.toggleModal}
               >
                 <Row className="form-group">
-                  <Label htmlFor="firstname" md={2}>
-                    Rating
-                  </Label>
-                  <Col md={{ size: 10 }}>
+                  <Col>
+                    <Label htmlFor="rating">Rating</Label>
                     <Control.select
-                      model=".Rating"
-                      name="Rating"
+                      model=".rating"
+                      id="rating"
                       className="form-control"
                     >
                       <option>1</option>
@@ -157,15 +131,14 @@ class CommentForm extends Component {
                   </Col>
                 </Row>
                 <Row className="form-group">
-                  <Label htmlFor="firstname" md={2}>
-                    First Name
-                  </Label>
-                  <Col md={10}>
+                  <Col>
+                    <Label htmlFor="author">Your Name</Label>
+
                     <Control.text
-                      model=".firstname"
-                      id="firstname"
-                      name="firstname"
-                      placeholder="First Name"
+                      model=".author"
+                      id="author"
+                      name="author"
+                      placeholder="Your Name"
                       className="form-control"
                       validators={{
                         required,
@@ -187,10 +160,8 @@ class CommentForm extends Component {
                 </Row>
 
                 <Row className="form-group">
-                  <Label htmlFor="comment" md={2}>
-                    Comment
-                  </Label>
-                  <Col md={10}>
+                  <Col>
+                    <Label htmlFor="comment">Comment</Label>
                     <Control.textarea
                       model=".comment"
                       id="comment"
@@ -201,8 +172,8 @@ class CommentForm extends Component {
                   </Col>
                 </Row>
                 <Row className="form-group">
-                  <Col md={{ size: 10, offset: 2 }}>
-                    <Button type="submit" color="primary">
+                  <Col>
+                    <Button type="submit" className="bg-primary">
                       Submit
                     </Button>
                   </Col>
@@ -215,4 +186,38 @@ class CommentForm extends Component {
     );
   }
 }
+
+const DishDetail = (props) => {
+  return props.dish ? (
+    <div className="container">
+      <div className="row">
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <Link to="/menu">Menu</Link>
+          </BreadcrumbItem>
+          <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+        </Breadcrumb>
+        <div className="col-12">
+          <h3>{props.dish.name}</h3>
+          <hr></hr>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-12 col-md-5 m-1">
+          <RenderDish dish={props.dish}></RenderDish>
+        </div>
+        <div className="col-12 col-md-5 m-1">
+          <RenderComments
+            comments={props.comments}
+            addComment={props.addComment}
+            dishId={props.dish.id}
+          />
+        </div>
+      </div>
+    </div>
+  ) : (
+    <div></div>
+  );
+};
+
 export default DishDetail;
