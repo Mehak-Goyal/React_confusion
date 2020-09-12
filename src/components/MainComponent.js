@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Home from "./HomeComponent";
 import Menu from "./MenuComponent";
 import About from "./AboutComponent";
@@ -63,9 +63,6 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 class Main extends React.Component {
-  constructor(props) {
-    super(props);
-  }
   componentDidMount() {
     this.props.fetchDishes();
     this.props.fetchComments();
